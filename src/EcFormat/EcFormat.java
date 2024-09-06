@@ -56,10 +56,27 @@ public final class EcFormat implements ActionListener {
 
                 fixElseIf(document);
 
+                fixCommaSpace(document);
+
             } catch (Exception ex) {
                 System.out.println(ex);
             }
         });
+    }
+
+    private void fixCommaSpace(StyledDocument document) throws Exception {
+        String sbs = document.getText(0, document.getLength());
+        List<Line> lines = Line.stringToLine(sbs);
+
+        for (int i = lines.size() - 1; i >= 0; i--) {
+            Line line = lines.get(i);
+
+            if (line.getContent().trim().startsWith(",")) {
+                if ((line.getIdxStartChar() - line.getIdxStart()) % 2 != 0) {
+                    document.remove(line.getIdxStart(), 1);
+                }
+            }
+        }
     }
 
     private void fixElseIf(StyledDocument document) throws Exception {
